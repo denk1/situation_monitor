@@ -6,8 +6,10 @@
 class ROI {
 public:
     ROI();
+    bool getData();
 private:
     NetworkClient networkClient_;
+ 
 
 };
 #endif

@@ -22,11 +22,13 @@ class NetworkClient {
         std::string read_line(boost::asio::chrono::steady_clock::duration timeout);
         void write_line(const std::string &line,
                   boost::asio::chrono::steady_clock::duration timeout);
+        bool getData();
 
     private:
         void run(boost::asio::chrono::steady_clock::duration timeout);
         boost::asio::io_context io_context_;
         boost::asio::ip::tcp::socket socket_;
         std::string input_buffer_;
+        const std::string test_msg_ = "msg";
 };
 #endif

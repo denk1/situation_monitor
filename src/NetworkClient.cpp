@@ -101,3 +101,23 @@ void NetworkClient::run(boost::asio::chrono::steady_clock::duration timeout)
       io_context_.run();
     }
 }
+
+bool NetworkClient::getData() {
+    write_line(test_msg_, boost::asio::chrono::seconds(10));
+    for (;;)
+    {
+      std::string line = read_line(boost::asio::chrono::seconds(10));
+
+      // Keep going until we get back the line that was sent.
+      if (line == test_msg_)
+        break;
+    }
+    boost::asio::chrono::steady_clock::time_point time_received =
+      boost::asio::chrono::steady_clock::now();
+
+    std::cout << "Round trip time: ";
+    std::cout << boost::asio::chrono::duration_cast<
+      boost::asio::chrono::microseconds>(
+        time_received - time_sent).count();
+    std::cout << " microseconds\n";
+}
