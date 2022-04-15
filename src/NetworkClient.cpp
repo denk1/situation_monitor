@@ -33,7 +33,7 @@ void NetworkClient::connect(const std::string &host, const std::string &service,
 }
 
 std::string NetworkClient::read_line(boost::asio::chrono::steady_clock::duration timeout)
-  {
+{
     // Start the asynchronous operation. The boost::lambda function object is
     // used as a callback and will update the ec variable when the operation
     // completes. The blocking_udp_client.cpp example shows how you can use
@@ -54,7 +54,7 @@ std::string NetworkClient::read_line(boost::asio::chrono::steady_clock::duration
     std::string line(input_buffer_.substr(0, n - 1));
     input_buffer_.erase(0, n);
     return line;
-  }
+}
 
 
 void NetworkClient::write_line(const std::string &line,
@@ -103,13 +103,15 @@ void NetworkClient::run(boost::asio::chrono::steady_clock::duration timeout)
 }
 
 bool NetworkClient::getData() {
+    boost::asio::chrono::steady_clock::time_point time_sent =
+          boost::asio::chrono::steady_clock::now();
     write_line(test_msg_, boost::asio::chrono::seconds(10));
     for (;;)
     {
       std::string line = read_line(boost::asio::chrono::seconds(10));
 
       // Keep going until we get back the line that was sent.
-      if (line == test_msg_)
+      //if (line == test_msg_)
         break;
     }
     boost::asio::chrono::steady_clock::time_point time_received =

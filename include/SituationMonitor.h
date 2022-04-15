@@ -124,7 +124,8 @@ class BtOgreTestApplication : public OgreBites::ApplicationContext, public OgreB
     bool frameStarted(const FrameEvent &evt)
     {
         OgreBites::ApplicationContext::frameStarted(evt);
-
+		
+		roi.getData();
 
         return true;
     }
