@@ -1,6 +1,7 @@
 #ifndef NETWORK_CLIENT_H
 #define NETWORK_CLIENT_H
 
+#include <boost/asio.hpp>
 #include <boost/asio/buffer.hpp>
 #include <boost/asio/connect.hpp>
 #include <boost/asio/io_context.hpp>
@@ -14,6 +15,8 @@
 #include <boost/lambda/bind.hpp>
 #include <boost/lambda/lambda.hpp>
 
+using byte = unsigned char;
+
 class NetworkClient {
     public:
         NetworkClient();
@@ -23,12 +26,17 @@ class NetworkClient {
         void write_line(const std::string &line,
                   boost::asio::chrono::steady_clock::duration timeout);
         bool getData();
+        bool isOpened();
 
     private:
+        void requestConnection();
+        std::string getDataFromServer(std::string str);
         void run(boost::asio::chrono::steady_clock::duration timeout);
+        bool is_connected_ = false;
         boost::asio::io_context io_context_;
         boost::asio::ip::tcp::socket socket_;
         std::string input_buffer_;
         const std::string test_msg_ = "msgjfjjjrjjtiugujgfjjtrj";
+
 };
 #endif

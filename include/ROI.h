@@ -6,6 +6,7 @@
 class ROI {
 public:
     ROI();
+    void connect();
     bool getData();
 private:
     NetworkClient networkClient_;

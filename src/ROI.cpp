@@ -1,6 +1,10 @@
 #include "ROI.h"
 
 ROI::ROI() {
+    
+}
+
+void ROI::connect() {
     try {
         networkClient_.connect("localhost", "15555", boost::asio::chrono::seconds(10));
     } catch( boost::system::system_error err) {
@@ -9,5 +13,7 @@ ROI::ROI() {
 }
 
 bool ROI::getData() {
-    return networkClient_.getData();
+    if(networkClient_.isOpened())
+        return networkClient_.getData();
+    return false;
 }

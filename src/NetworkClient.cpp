@@ -1,10 +1,12 @@
 #include "NetworkClient.h"
+#include <sstream>
 
 using boost::asio::ip::tcp;
 using boost::lambda::_1;
 using boost::lambda::_2;
 using boost::lambda::bind;
 using boost::lambda::var;
+
 
 NetworkClient::NetworkClient(): socket_(io_context_) {
 
@@ -30,6 +32,8 @@ void NetworkClient::connect(const std::string &host, const std::string &service,
     if (ec)
       throw boost::system::system_error(ec);
 
+    requestConnection();
+
 }
 
 std::string NetworkClient::read_line(boost::asio::chrono::steady_clock::duration timeout)
@@ -40,17 +44,19 @@ std::string NetworkClient::read_line(boost::asio::chrono::steady_clock::duration
     // boost::bind rather than boost::lambda.
     boost::system::error_code ec;
     std::size_t n = 0;
-    boost::asio::async_read_until(socket_,
-                                  boost::asio::dynamic_buffer(input_buffer_),
-                                  '\n', (var(ec) = _1, var(n) = _2));
-
+    
+    boost::asio::async_read(socket_, boost::asio::dynamic_buffer(input_buffer_), boost::asio::transfer_at_least(1), 
+                                    [&](boost::system::error_code ecc, size_t s) {
+                                    ec = ecc;
+                                    n = s;
+                                    std::cout << s << std::endl;
+                                  });                              
     // Run the operation until it completes, or until the timeout.
     run(timeout);
 
     // Determine whether the read completed successfully.
     if (ec)
       throw boost::system::system_error(ec);
-
     std::string line(input_buffer_.substr(0, n - 1));
     input_buffer_.erase(0, n);
     return line;
@@ -70,7 +76,7 @@ void NetworkClient::write_line(const std::string &line,
     boost::asio::async_write(socket_, boost::asio::buffer(data), var(ec) = _1);
 
     // Run the operation until it completes, or until the timeout.
-    run(timeout);
+    //run(timeout);
 
     // Determine whether the read completed successfully.
     if (ec)
@@ -103,23 +109,53 @@ void NetworkClient::run(boost::asio::chrono::steady_clock::duration timeout)
 }
 
 bool NetworkClient::getData() {
+    std::stringstream ss;
     boost::asio::chrono::steady_clock::time_point time_sent =
           boost::asio::chrono::steady_clock::now();
-    write_line(test_msg_, boost::asio::chrono::seconds(10));
-    for (;;)
-    {
-      std::string line = read_line(boost::asio::chrono::seconds(10));
-
-      // Keep going until we get back the line that was sent.
-      //if (line == test_msg_)
-        break;
-    }
     boost::asio::chrono::steady_clock::time_point time_received =
       boost::asio::chrono::steady_clock::now();
 
+    ss << (byte)0x79;
+    ss << (byte)0x88;
+
+    getDataFromServer(ss.str());
     std::cout << "Round trip time: ";
     std::cout << boost::asio::chrono::duration_cast<
       boost::asio::chrono::microseconds>(
         time_received - time_sent).count();
     std::cout << " microseconds\n";
 }
+
+ bool NetworkClient::isOpened() {
+   return socket_.is_open() && is_connected_;
+
+ }
+
+std::string NetworkClient::getDataFromServer(std::string str){
+   write_line(str, boost::asio::chrono::seconds(10));
+   std::string line;
+    for (;;)
+    {
+      line = read_line(boost::asio::chrono::seconds(10));
+      const byte* byte_line = reinterpret_cast<const byte*>(line.c_str());
+      
+      const size_t s = *reinterpret_cast<const size_t*>(byte_line + 2);
+      std::cout << (size_t)byte_line[0] << ' ' << (size_t)byte_line[1] << ' ' << s << ' ' << line.size() << std::endl; 
+
+      // Keep going until we get back the line that was sent.
+      //if (line == test_msg_)
+        break;
+    }
+    
+    return line;
+ }
+
+ void NetworkClient::requestConnection() {
+     std::stringstream ss;
+     ss << (byte)0x79;
+     ss << (byte)0x90;
+     const std::string line = getDataFromServer(ss.str());
+     if(line[0] == (byte)0x79 && line[1] == (byte)0x91) {
+            is_connected_ = true;
+     }
+ }

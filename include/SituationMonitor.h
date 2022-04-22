@@ -49,6 +49,7 @@ class BtOgreTestApplication : public OgreBites::ApplicationContext, public OgreB
 
 	void setup(void)
 	{
+		roi.connect();
 	    OgreBites::ApplicationContext::setup();
 	    addInputListener(this);
 
