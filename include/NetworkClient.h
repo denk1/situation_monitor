@@ -25,7 +25,7 @@ class NetworkClient {
         std::string read_line(boost::asio::chrono::steady_clock::duration timeout);
         void write_line(const std::string &line,
                   boost::asio::chrono::steady_clock::duration timeout);
-        bool getData();
+        std::string getData();
         bool isOpened();
 
     private:

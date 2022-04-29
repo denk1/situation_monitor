@@ -10,6 +10,7 @@ public:
     bool getData();
 private:
     NetworkClient networkClient_;
+    std::string str_buff_data_;
  
 
 };

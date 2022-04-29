@@ -13,7 +13,9 @@ void ROI::connect() {
 }
 
 bool ROI::getData() {
-    if(networkClient_.isOpened())
-        return networkClient_.getData();
+    if(networkClient_.isOpened()) {
+        networkClient_.getData();
+        return true;
+    }
     return false;
 }

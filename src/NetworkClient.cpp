@@ -6,6 +6,7 @@ using boost::lambda::_1;
 using boost::lambda::_2;
 using boost::lambda::bind;
 using boost::lambda::var;
+using namespace std::chrono_literals;
 
 
 NetworkClient::NetworkClient(): socket_(io_context_) {
@@ -46,18 +47,14 @@ std::string NetworkClient::read_line(boost::asio::chrono::steady_clock::duration
     std::size_t n = 0;
     
     boost::asio::async_read(socket_, boost::asio::dynamic_buffer(input_buffer_), boost::asio::transfer_at_least(1), 
-                                    [&](boost::system::error_code ecc, size_t s) {
-                                    ec = ecc;
-                                    n = s;
-                                    std::cout << s << std::endl;
-                                  });                              
+                                    (var(ec) = _1, var(n) = _2));                              
     // Run the operation until it completes, or until the timeout.
     run(timeout);
 
     // Determine whether the read completed successfully.
     if (ec)
       throw boost::system::system_error(ec);
-    std::string line(input_buffer_.substr(0, n - 1));
+    std::string line(input_buffer_.substr(0, n));
     input_buffer_.erase(0, n);
     return line;
 }
@@ -108,22 +105,25 @@ void NetworkClient::run(boost::asio::chrono::steady_clock::duration timeout)
     }
 }
 
-bool NetworkClient::getData() {
+std::string NetworkClient::getData() {
     std::stringstream ss;
+    std::string str_data;
     boost::asio::chrono::steady_clock::time_point time_sent =
           boost::asio::chrono::steady_clock::now();
-    boost::asio::chrono::steady_clock::time_point time_received =
-      boost::asio::chrono::steady_clock::now();
+    
 
     ss << (byte)0x79;
     ss << (byte)0x88;
 
-    getDataFromServer(ss.str());
+    str_data = getDataFromServer(ss.str());
+    boost::asio::chrono::steady_clock::time_point time_received =
+      boost::asio::chrono::steady_clock::now();
     std::cout << "Round trip time: ";
     std::cout << boost::asio::chrono::duration_cast<
       boost::asio::chrono::microseconds>(
         time_received - time_sent).count();
     std::cout << " microseconds\n";
+    return str_data;
 }
 
  bool NetworkClient::isOpened() {
@@ -155,7 +155,7 @@ std::string NetworkClient::getDataFromServer(std::string str){
      ss << (byte)0x79;
      ss << (byte)0x90;
      const std::string line = getDataFromServer(ss.str());
-     if(line[0] == (byte)0x79 && line[1] == (byte)0x91) {
+     if((byte)line[0] == (byte)0x79 && (byte)line[1] == (byte)0x91) {
             is_connected_ = true;
      }
  }
