@@ -9,6 +9,7 @@
 #include "OgreMovableObject.h"
 #include "OgreMeshManager.h"
 #include "ROI.h"
+#include "MeshObject.h"
 
 using namespace Ogre;
 
@@ -32,6 +33,7 @@ class BtOgreTestApplication : public OgreBites::ApplicationContext, public OgreB
 	OgreBites::CameraMan *mCamMan;
 
     ROI roi;
+	MeshObject meshObject_;
 
 	bool mDebugOn;
     
@@ -126,7 +128,7 @@ class BtOgreTestApplication : public OgreBites::ApplicationContext, public OgreB
     {
         OgreBites::ApplicationContext::frameStarted(evt);
 		
-		roi.getData();
+		roi.getData(&meshObject_);
 
         return true;
     }

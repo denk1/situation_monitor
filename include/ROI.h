@@ -2,15 +2,16 @@
 #define ROI_H
 
 #include "NetworkClient.h"
+#include "MeshObject.h"
 
 class ROI {
 public:
     ROI();
     void connect();
-    bool getData();
+    bool getData(MeshObject* ptrMeshObject);
 private:
     NetworkClient networkClient_;
-    std::string str_buff_data_;
+    
  
 
 };

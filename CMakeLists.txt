@@ -15,7 +15,9 @@ add_executable(${PROJECT_NAME}
                  src/SituationMonitor.cpp
                  src/ROI.cpp
                  src/NetworkClient.cpp
-                 src/main.cpp)
+                 src/MeshObject.cpp
+                 src/main.cpp
+                 )
 target_link_libraries(situation_monitor OgreMain OgreBites BtOgre tinyxml)
 configure_file(data/resources.cfg.in ${CMAKE_BINARY_DIR}/resources.cfg @ONLY)
 file(COPY ${OGRE_CONFIG_DIR}/plugins.cfg DESTINATION ${CMAKE_BINARY_DIR})

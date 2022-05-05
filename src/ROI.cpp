@@ -12,9 +12,10 @@ void ROI::connect() {
     }
 }
 
-bool ROI::getData() {
+bool ROI::getData(MeshObject* ptrMeshObject) {
     if(networkClient_.isOpened()) {
-        networkClient_.getData();
+        ptrMeshObject->set_str_buff(networkClient_.getData());
+        ptrMeshObject->convert_to_scene_obj();
         return true;
     }
     return false;
