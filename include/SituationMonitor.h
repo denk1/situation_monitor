@@ -20,7 +20,7 @@ using namespace Ogre;
  * =====================================================================================
  */
 
-class BtOgreTestApplication : public OgreBites::ApplicationContext, public OgreBites::InputListener
+class SituationMonitor: public Ogre::Singleton<SituationMonitor>, public OgreBites::ApplicationContext, public OgreBites::InputListener
 {
 
 	Ogre::SceneManager* mSceneMgr;
@@ -39,11 +39,12 @@ class BtOgreTestApplication : public OgreBites::ApplicationContext, public OgreB
     
 
     public:
-	BtOgreTestApplication() : OgreBites::ApplicationContext("BtOgre")
+
+	SituationMonitor() : OgreBites::ApplicationContext("Situation Monitor")
 	{
 		mDebugOn = true;
 	}
-
+	
 	void shutdown()
 	{
 		OgreBites::ApplicationContext::shutdown();
@@ -132,6 +133,14 @@ class BtOgreTestApplication : public OgreBites::ApplicationContext, public OgreB
 
         return true;
     }
+
+	Ogre::SceneManager *getSceneManagerS()
+	{
+    	return getSingleton().mSceneMgr;
+	}
+
+	
+
 };
 
 #endif

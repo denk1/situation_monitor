@@ -31,10 +31,11 @@ int main(int argc, char **argv)
 #endif
 {
     // Create application object
-    BtOgreTestApplication app;
-    app.initApp();
-    app.getRoot()->startRendering();
-    app.closeApp();
+    
+    SituationMonitor app;
+    SituationMonitor::getSingleton().initApp();
+    SituationMonitor::getSingleton().getRoot()->startRendering();
+    SituationMonitor::getSingleton().closeApp();
 
     return 0;
 }
