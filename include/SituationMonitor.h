@@ -11,6 +11,7 @@
 #include "ROI.h"
 #include "MeshObject.h"
 
+
 using namespace Ogre;
 
 /*
@@ -20,7 +21,13 @@ using namespace Ogre;
  * =====================================================================================
  */
 
-class SituationMonitor: public Ogre::Singleton<SituationMonitor>, public OgreBites::ApplicationContext, public OgreBites::InputListener
+class ROI;
+class MeshObject;
+
+class SituationMonitor: public Ogre::Singleton<SituationMonitor>,
+						public OgreBites::ApplicationContext,
+						public OgreBites::InputListener, 
+						std::enable_shared_from_this<SituationMonitor>
 {
 
 	Ogre::SceneManager* mSceneMgr;
@@ -40,7 +47,7 @@ class SituationMonitor: public Ogre::Singleton<SituationMonitor>, public OgreBit
 
     public:
 
-	SituationMonitor() : OgreBites::ApplicationContext("Situation Monitor")
+	SituationMonitor() : OgreBites::ApplicationContext("Situation Monitor"), meshObject_(this)
 	{
 		mDebugOn = true;
 	}
@@ -138,9 +145,6 @@ class SituationMonitor: public Ogre::Singleton<SituationMonitor>, public OgreBit
 	{
     	return getSingleton().mSceneMgr;
 	}
-
-	
-
 };
 
 #endif

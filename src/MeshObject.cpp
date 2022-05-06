@@ -1,7 +1,13 @@
-#include "MeshObject.h"
 #include <iostream>
 
+#include "MeshObject.h"
+#include "SituationMonitor.h"
+
 using byte = unsigned char;
+
+MeshObject::MeshObject(SituationMonitor* ptrSituationMonitor): mPtrSituationMonitor_(ptrSituationMonitor) {
+    
+}
 
 void MeshObject::set_str_buff(const std::string& str_buff) {
     buff_scene_ = str_buff;
@@ -25,5 +31,12 @@ void MeshObject::convert_to_scene_obj() {
                                         mat4[8], mat4[9], mat4[10], mat4[11],
                                         mat4[12], mat4[13], mat4[14], mat4[15]
                                     );
+    }
+}
+
+void MeshObject::create_scene_nodes() {
+    Ogre::SceneManager* sceneManager = mPtrSituationMonitor_->getSceneManagerS();
+    for(auto& mat4 : buff_vec_mat4_) {
+        
     }
 }

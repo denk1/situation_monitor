@@ -16,6 +16,7 @@ bool ROI::getData(MeshObject* ptrMeshObject) {
     if(networkClient_.isOpened()) {
         ptrMeshObject->set_str_buff(networkClient_.getData());
         ptrMeshObject->convert_to_scene_obj();
+        ptrMeshObject->create_scene_nodes();
         return true;
     }
     return false;
