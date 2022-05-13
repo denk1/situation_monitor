@@ -24,7 +24,7 @@ void MeshObject::convert_to_scene_obj() {
     buff_vec_mat4_.clear();
     for(size_t i = 0; i < *s; i++) {
         size_t size_of_mat4 = i * 64;
-        std::copy(buff_scene_.begin() + 2 + size_of_mat4, buff_scene_.begin() + 64 + size_of_mat4 , byte_mat4);
+        std::copy(buff_scene_.begin() + 10 + size_of_mat4, buff_scene_.begin() + 64 + size_of_mat4 , byte_mat4);
         buff_vec_mat4_.emplace_back(
                                         mat4[0], mat4[1], mat4[2], mat4[3], 
                                         mat4[4], mat4[5], mat4[6], mat4[7],
@@ -35,8 +35,17 @@ void MeshObject::convert_to_scene_obj() {
 }
 
 void MeshObject::create_scene_nodes() {
+    
     Ogre::SceneManager* sceneManager = mPtrSituationMonitor_->getSceneManagerS();
+    
     for(auto& mat4 : buff_vec_mat4_) {
-        
+        const Ogre::Affine3 affine3(mat4);
+        Vector3 position; 
+        Vector3 scale; 
+        Quaternion orientation;
+        affine3.decomposition(position, scale, orientation);
+        int a = 4;
+        //Ogre::Entity* unitCubeEnt = sceneManager->createEntity( "CubeObserver.mesh");
+        //Ogre::SceneNode* sceneNode = sceneManager->getRootSceneNode()->createChildSceneNode();
     }
 }
