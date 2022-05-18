@@ -18,6 +18,7 @@ private:
     std::string buff_scene_;
     vec_mat4 buff_vec_mat4_;
     SituationMonitor* mPtrSituationMonitor_;
+    Ogre::Vector3 own_position_; 
 
 };
 #endif

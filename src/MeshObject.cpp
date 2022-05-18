@@ -35,17 +35,25 @@ void MeshObject::convert_to_scene_obj() {
 }
 
 void MeshObject::create_scene_nodes() {
-    
+   
     Ogre::SceneManager* sceneManager = mPtrSituationMonitor_->getSceneManagerS();
     
-    for(auto& mat4 : buff_vec_mat4_) {
-        const Ogre::Affine3 affine3(mat4);
+    for(size_t i = 0; i < buff_vec_mat4_.size();) {
+        const Ogre::Affine3 affine3(buff_vec_mat4_[i]);
         Vector3 position; 
         Vector3 scale; 
         Quaternion orientation;
+        
         affine3.decomposition(position, scale, orientation);
-        int a = 4;
-        //Ogre::Entity* unitCubeEnt = sceneManager->createEntity( "CubeObserver.mesh");
-        //Ogre::SceneNode* sceneNode = sceneManager->getRootSceneNode()->createChildSceneNode();
+        if(i == 0) {
+            own_position_ = position;
+        }
+        else {
+            Vector3 curr_position = position - own_position_;
+            Ogre::Entity* unitCubeEnt = sceneManager->createEntity( "CubeObserver.mesh");
+            Ogre::SceneNode* sceneNode = sceneManager->getRootSceneNode()->createChildSceneNode();
+            
+        }
+        
     }
 }
