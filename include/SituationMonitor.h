@@ -1,5 +1,6 @@
 #ifndef SITUATION_MONITOR_H
 #define SITUATION_MONITOR_H
+#include <memory>
 #include "OgreApplicationContext.h"
 #include "OgreCameraMan.h"
 #include "OgreRoot.h"
@@ -40,14 +41,14 @@ class SituationMonitor: public Ogre::Singleton<SituationMonitor>,
 	OgreBites::CameraMan *mCamMan;
 
     ROI roi;
-	MeshObject meshObject_;
+	std::shared_ptr<MeshObject> ptrMeshObject_;
 
 	bool mDebugOn;
     
 
     public:
 
-	SituationMonitor() : OgreBites::ApplicationContext("Situation Monitor"), meshObject_(this)
+	SituationMonitor() : OgreBites::ApplicationContext("Situation Monitor")
 	{
 		mDebugOn = true;
 	}
@@ -112,7 +113,7 @@ class SituationMonitor: public Ogre::Singleton<SituationMonitor>,
     	pPlaneEnt->setCastShadows(false);
     	// Create Ogre stuff.
     	mSceneMgr->getRootSceneNode()->createChildSceneNode(Vector3(0, 99, 0))->attachObject(pPlaneEnt);
-
+		ptrMeshObject_ = std::make_shared<MeshObject>(this);
 
 	}
 
@@ -136,7 +137,7 @@ class SituationMonitor: public Ogre::Singleton<SituationMonitor>,
     {
         OgreBites::ApplicationContext::frameStarted(evt);
 		
-		roi.getData(&meshObject_);
+		roi.getData(ptrMeshObject_);
 
         return true;
     }

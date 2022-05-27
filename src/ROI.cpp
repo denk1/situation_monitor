@@ -12,7 +12,7 @@ void ROI::connect() {
     }
 }
 
-bool ROI::getData(MeshObject* ptrMeshObject) {
+bool ROI::getData(std::shared_ptr<MeshObject> ptrMeshObject) {
     if(networkClient_.isOpened()) {
         ptrMeshObject->set_str_buff(networkClient_.getData());
         ptrMeshObject->convert_to_scene_obj();

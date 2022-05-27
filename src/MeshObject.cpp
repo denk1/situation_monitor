@@ -6,7 +6,8 @@
 using byte = unsigned char;
 
 MeshObject::MeshObject(SituationMonitor* ptrSituationMonitor): mPtrSituationMonitor_(ptrSituationMonitor) {
-    
+    mSceneManager_ = mPtrSituationMonitor_->getSceneManagerS();
+    mRootSceneNode_ = mSceneManager_->getRootSceneNode();
 }
 
 void MeshObject::set_str_buff(const std::string& str_buff) {
@@ -46,9 +47,11 @@ void MeshObject::convert_to_scene_obj() {
 }
 
 void MeshObject::create_scene_nodes() {
-   
-    Ogre::SceneManager* sceneManager = mPtrSituationMonitor_->getSceneManagerS();
-    
+    std::vector<size_t> vDiff_;    
+    std::set_difference(sPrevEntities_.begin(), sPrevEntities_.end(), buff_map_mat4_.begin(), buff_map_mat4_.end(),
+    std::inserter(vDiff_, vDiff_.end()), cmp());
+
+    sPrevEntities_.clear();
     for(auto& sn_obj : buff_map_mat4_) {
         const Ogre::Affine3 affine3(sn_obj.second);
         Vector3 position; 
@@ -60,11 +63,22 @@ void MeshObject::create_scene_nodes() {
             own_position_ = position;
         }
         else {
+            std::stringstream str_stream;
+            str_stream << sn_obj.first;
             Vector3 curr_position = position - own_position_;
-            //Ogre::Entity* unitCubeEnt = sceneManager->createEntity( "CubeObserver.mesh");
-            //Ogre::SceneNode* sceneNode = sceneManager->getRootSceneNode()->createChildSceneNode();
-            
+            Ogre::Entity* unitCubeEnt = mSceneManager_->createEntity( "CubeObserver.mesh");
+            Ogre::SceneNode* sceneNode = mRootSceneNode_->createChildSceneNode(str_stream.str(), curr_position, orientation);
+            sPrevEntities_.insert(sn_obj.first);
         }
         
+    }
+    
+}
+
+void MeshObject::del_prev_nodes(const std::vector<size_t>& vDiff) {
+    for(auto& it :vDiff) {
+        std::stringstream str_stream;
+        str_stream << it;
+        mRootSceneNode_->removeChild(str_stream.str());
     }
 }
