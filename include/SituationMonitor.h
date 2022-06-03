@@ -80,16 +80,17 @@ class SituationMonitor: public Ogre::Singleton<SituationMonitor>,
 	    mCamera = mSceneMgr->createCamera("myCam");
 	    mCamera->setAutoAspectRatio(true);
 
-	    Ogre::SceneNode* camnode = mSceneMgr->getRootSceneNode()->createChildSceneNode();
+	    Ogre::SceneNode* camnode = mSceneMgr->getRootSceneNode()->createChildSceneNode("CameraNode");
 	    camnode->attachObject(mCamera);
+		camnode->setPosition(Ogre::Vector3(0, 0, 0.0f));
 
 	    // and tell it to render into the main window
 	    getRenderWindow()->addViewport(mCamera);
 
-	    mCamMan = new OgreBites::CameraMan(camnode);
-	    mCamMan->setStyle(OgreBites::CS_ORBIT);
-	    mCamMan->setYawPitchDist(Ogre::Degree(0), Ogre::Degree(0), 50);
-	    addInputListener(mCamMan);
+	    //mCamMan = new OgreBites::CameraMan(camnode);
+	    //mCamMan->setStyle(OgreBites::CS_ORBIT);
+	    //mCamMan->setYawPitchDist(Ogre::Degree(0), Ogre::Degree(0), 50);
+	    //addInputListener(mCamMan);
 
 	    //Some normal stuff.
 	    mSceneMgr->setAmbientLight(ColourValue(0.7,0.7,0.7));

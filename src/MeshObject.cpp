@@ -50,6 +50,12 @@ void MeshObject::create_scene_nodes() {
     std::vector<size_t> vDiff_;    
     std::set_difference(sPrevEntities_.begin(), sPrevEntities_.end(), buff_map_mat4_.begin(), buff_map_mat4_.end(),
     std::inserter(vDiff_, vDiff_.end()), cmp());
+    
+    for(auto n :vDiff_) {
+        std::stringstream str_stream;
+        str_stream << n;
+        mRootSceneNode_->removeAndDestroyChild(str_stream.str());
+    }
 
     sPrevEntities_.clear();
     for(auto& sn_obj : buff_map_mat4_) {
@@ -61,13 +67,28 @@ void MeshObject::create_scene_nodes() {
         affine3.decomposition(position, scale, orientation);
         if(sn_obj.first == 0) {
             own_position_ = position;
+            own_quaternion_ = orientation;
+            Ogre::Node* cameraNode = mRootSceneNode_->getChild("CameraNode");
+            cameraNode->setOrientation(own_quaternion_);
         }
         else {
             std::stringstream str_stream;
             str_stream << sn_obj.first;
-            Vector3 curr_position = position - own_position_;
-            Ogre::Entity* unitCubeEnt = mSceneManager_->createEntity( "CubeObserver.mesh");
-            Ogre::SceneNode* sceneNode = mRootSceneNode_->createChildSceneNode(str_stream.str(), curr_position, orientation);
+            Vector3 curr_position = own_position_ - position;
+            try
+            {
+                Ogre::Node* node = mRootSceneNode_->getChild(str_stream.str());
+                node->setOrientation( orientation );
+                node->setPosition(curr_position);
+                node->setScale(scale);
+                // At this point, the scenenode exists
+            }
+            catch (Ogre::Exception ex)
+            {
+                Ogre::Entity* unitCubeEnt = mSceneManager_->createEntity( "CubeObserver.mesh");
+                Ogre::SceneNode* sceneNode = mRootSceneNode_->createChildSceneNode(str_stream.str(), curr_position, orientation);
+                sceneNode->attachObject(unitCubeEnt);
+            }
             sPrevEntities_.insert(sn_obj.first);
         }
         

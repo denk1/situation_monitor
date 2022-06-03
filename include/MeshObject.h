@@ -36,6 +36,7 @@ private:
     map_mat4 buff_map_mat4_;
     SituationMonitor* mPtrSituationMonitor_;
     Ogre::Vector3 own_position_;
+    Ogre::Quaternion own_quaternion_;
     std::set<size_t> sPrevEntities_;
     Ogre::SceneManager* mSceneManager_;
     Ogre::SceneNode* mRootSceneNode_;
