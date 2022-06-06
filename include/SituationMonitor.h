@@ -84,6 +84,7 @@ class SituationMonitor: public Ogre::Singleton<SituationMonitor>,
 	    camnode->attachObject(mCamera);
 		camnode->setPosition(Ogre::Vector3(0, 0, 0.0f));
 
+
 	    // and tell it to render into the main window
 	    getRenderWindow()->addViewport(mCamera);
 

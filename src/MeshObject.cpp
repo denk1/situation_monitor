@@ -70,11 +70,12 @@ void MeshObject::create_scene_nodes() {
             own_quaternion_ = orientation;
             Ogre::Node* cameraNode = mRootSceneNode_->getChild("CameraNode");
             cameraNode->setOrientation(own_quaternion_);
+            cameraNode->rotate(Ogre::Quaternion(Ogre::Radian(M_PI), Ogre::Vector3(0, 1, 0)));
         }
         else {
             std::stringstream str_stream;
             str_stream << sn_obj.first;
-            Vector3 curr_position = own_position_ - position;
+            Vector3 curr_position = position - own_position_;
             try
             {
                 Ogre::Node* node = mRootSceneNode_->getChild(str_stream.str());
