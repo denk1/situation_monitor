@@ -2,8 +2,9 @@
 #define ROI_H
 
 #include <memory>
-#include "NetworkClient.h"
+#include "NetworkClientITS.h"
 #include "MeshObject.h"
+#include "PathFinder.h"
 
 
 class ROI {
@@ -12,6 +13,7 @@ public:
     void connect();
     bool getData(std::shared_ptr<MeshObject> ptrMeshObject);
 private:
-    NetworkClient networkClient_;
+    NetworkClientITS networkClient_;
+    PathFinder pathFinder_;
 };
 #endif
