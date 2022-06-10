@@ -13,8 +13,5 @@ public:
     bool getData(std::shared_ptr<MeshObject> ptrMeshObject);
 private:
     NetworkClient networkClient_;
-    
- 
-
 };
 #endif

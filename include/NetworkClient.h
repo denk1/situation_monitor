@@ -36,7 +36,5 @@ class NetworkClient {
         boost::asio::io_context io_context_;
         boost::asio::ip::tcp::socket socket_;
         std::string input_buffer_;
-        const std::string test_msg_ = "msgjfjjjrjjtiugujgfjjtrj";
-
 };
 #endif
