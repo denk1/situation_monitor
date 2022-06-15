@@ -33,7 +33,7 @@ void NetworkClient::connect(const std::string &host, const std::string &service,
     if (ec)
       throw boost::system::system_error(ec);
 
-    requestConnection();
+    //requestConnection();
 
 }
 
@@ -158,4 +158,8 @@ std::string NetworkClient::getDataFromServer(std::string str){
      if((byte)line[0] == (byte)0x79 && (byte)line[1] == (byte)0x91) {
             is_connected_ = true;
      }
+ }
+
+ bool NetworkClient::isSocketOpened() {
+   return socket_.is_open();
  }

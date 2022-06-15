@@ -15,6 +15,9 @@ add_executable(${PROJECT_NAME}
                  src/SituationMonitor.cpp
                  src/ROI.cpp
                  src/NetworkClient.cpp
+                 src/NetworkClientITS.cpp
+                 src/NetworkClientBMD.cpp
+                 src/PathFinder.cpp
                  src/MeshObject.cpp
                  src/main.cpp
                  )

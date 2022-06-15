@@ -27,6 +27,7 @@ class NetworkClient {
                   boost::asio::chrono::steady_clock::duration timeout);
         std::string getData();
         bool isOpened();
+        bool isSocketOpened();
 
     private:
         void requestConnection();
@@ -36,7 +37,5 @@ class NetworkClient {
         boost::asio::io_context io_context_;
         boost::asio::ip::tcp::socket socket_;
         std::string input_buffer_;
-        const std::string test_msg_ = "msgjfjjjrjjtiugujgfjjtrj";
-
 };
 #endif
