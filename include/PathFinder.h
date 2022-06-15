@@ -13,15 +13,15 @@ class PathFinder {
     public:
         PathFinder();
         ~PathFinder();
-        void setData(std::string& str_buff) {
-            std::lock_guard lock(mutex_);
+        void setData(const std::string& str_buff) {
             str_buff_ = str_buff;
         }
+        void convertBuff();
 
     private:
         void Run();
-        void convertBuff();
         bool mIsStop;
+        bool mStartSending;
         std::string str_buff_;
         std::string str_buff_convert_;
         std::unique_ptr<std::thread> mThread;

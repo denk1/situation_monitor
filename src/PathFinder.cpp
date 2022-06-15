@@ -2,12 +2,13 @@
 
 using namespace std::chrono_literals;
 
-PathFinder::PathFinder() {
+PathFinder::PathFinder(): mIsStop(), mStartSending() {
     mThread = std::make_unique<std::thread>(&PathFinder::Run, this);
 }
 
 PathFinder::~PathFinder() {
-     
+    mIsStop = true;
+    mThread->join();
 }
 
 void PathFinder::Run() {
@@ -15,6 +16,9 @@ void PathFinder::Run() {
     networkClient_.connect("10.91.1.33", "15556", 10);
     while (!mIsStop)
     {
+        if(!mStartSending)
+            continue;
+        std::lock_guard lock(mutex_);
         std::cout << networkClient_.getDataFromServer(str_buff_convert_);
         
     }
@@ -40,6 +44,5 @@ void PathFinder::convertBuff() {
     str_buff_convert_.append(y_g, y_g + 4);
     str_buff_convert_.append(z_g, z_g + 4);
     str_buff_convert_.append(str_buff_.begin() + 2, str_buff_.end());
-
-
+    mStartSending = true;
 }

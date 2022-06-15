@@ -14,6 +14,6 @@ public:
     bool getData(std::shared_ptr<MeshObject> ptrMeshObject);
 private:
     NetworkClientITS networkClient_;
-    PathFinder pathFinder_;
+    //PathFinder pathFinder_;
 };
 #endif
