@@ -44,7 +44,7 @@ std::string NetworkClientITS::getDataFromServer(std::string str){
       line = networkClient_.read_line(boost::asio::chrono::seconds(10));
       const byte* byte_line = reinterpret_cast<const byte*>(line.c_str());
       
-      const size_t s = *reinterpret_cast<const size_t*>(byte_line + 2);
+      const size_t s = *reinterpret_cast<const size_t*>(byte_line + 6);
       std::cout << (size_t)byte_line[0] << ' ' << (size_t)byte_line[1] << ' ' << s << ' ' << line.size() << std::endl; 
 
       // Keep going until we get back the line that was sent.

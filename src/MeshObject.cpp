@@ -21,13 +21,13 @@ void MeshObject::convert_to_scene_obj() {
     Ogre::Real mat4[16];
     byte_mat4 = reinterpret_cast<byte*>(mat4);
     
-    std::copy(buff_scene_.begin() + 2, buff_scene_.begin() + 10, s_in_bytes);
+    std::copy(buff_scene_.begin() + 6, buff_scene_.begin() + 14, s_in_bytes);
     const size_t* s = reinterpret_cast<const size_t*>(s_in_bytes);
     buff_map_mat4_.clear();
     for(size_t i = 0; i < *s; i++) {
         size_t size_of_mat4 = i * 72;
-        std::copy(buff_scene_.begin() + 10 + size_of_mat4, buff_scene_.begin() + 18 + size_of_mat4, id_in_bytes);
-        std::copy(buff_scene_.begin() + 18 + size_of_mat4, buff_scene_.begin() + 72 + size_of_mat4 , byte_mat4);
+        std::copy(buff_scene_.begin() + 14 + size_of_mat4, buff_scene_.begin() + 22 + size_of_mat4, id_in_bytes);
+        std::copy(buff_scene_.begin() + 22 + size_of_mat4, buff_scene_.begin() + 76 + size_of_mat4 , byte_mat4);
         const size_t* id = reinterpret_cast<const size_t*>(id_in_bytes);
         if(buff_map_mat4_.end() == buff_map_mat4_.find(*id)) {
             buff_map_mat4_.emplace( std::make_pair(*id, Ogre::Matrix4( 
