@@ -20,5 +20,8 @@ class NetworkClientBMD {
         void sendData();
         bool is_connected_ = false;
         NetworkClient networkClient_;
+        std::string host_;
+        std::string service_;
+        int timeout_;
 };
 #endif

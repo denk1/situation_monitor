@@ -20,8 +20,8 @@ bool ROI::getData(std::shared_ptr<MeshObject> ptrMeshObject) {
         ptrMeshObject->set_str_buff(str_data);
         ptrMeshObject->convert_to_scene_obj();
         ptrMeshObject->create_scene_nodes();
-        //pathFinder_.setData(str_data);
-        //pathFinder_.convertBuff();
+        pathFinder_.setData(str_data);
+        pathFinder_.convertBuff();
         return true;
     }
     return false;
