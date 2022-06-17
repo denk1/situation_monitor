@@ -2,12 +2,13 @@
 
 using namespace std;
 
-ROI::ROI() {
-    
+ROI::ROI():pathFinder_() {
+   
 }
 
 void ROI::connect() {
     try {
+        pathFinder_.start();
         networkClient_.connect("localhost", "15555", 10);
     } catch( boost::system::system_error err) {
         std::cerr << "connection error: " << err.what() << std::endl; 

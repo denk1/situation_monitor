@@ -1,4 +1,5 @@
 #include "NetworkClientITS.h"
+#include <boost/smart_ptr/make_shared.hpp>
 
 NetworkClientITS::NetworkClientITS() {
 
@@ -6,7 +7,8 @@ NetworkClientITS::NetworkClientITS() {
 
 void NetworkClientITS::connect(const std::string &host, const std::string &service,
                const int timeout_sec) {
-                   networkClient_.connect(host, service, boost::asio::chrono::seconds(timeout_sec));
+                  networkClient_ = boost::make_shared<NetworkClient>();
+                  networkClient_->connect(host, service, boost::asio::chrono::seconds(timeout_sec));
                     requestConnection();
                }
 
@@ -32,16 +34,16 @@ std::string NetworkClientITS::getData() {
 }
 
  bool NetworkClientITS::isOpened() {
-   return networkClient_.isSocketOpened() && is_connected_;
+   return networkClient_->isSocketOpened() && is_connected_;
 
  }
 
 std::string NetworkClientITS::getDataFromServer(std::string str){
-   networkClient_.write_line(str, boost::asio::chrono::seconds(10));
+   networkClient_->write_line(str, boost::asio::chrono::seconds(10));
    std::string line;
     for (;;)
     {
-      line = networkClient_.read_line(boost::asio::chrono::seconds(10));
+      line = networkClient_->read_line(boost::asio::chrono::seconds(10));
       const byte* byte_line = reinterpret_cast<const byte*>(line.c_str());
       
       const size_t s = *reinterpret_cast<const size_t*>(byte_line + 6);

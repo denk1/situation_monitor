@@ -3,7 +3,7 @@
 using namespace std::chrono_literals;
 
 PathFinder::PathFinder(): mIsStop(), mStartSending() {
-    mThread = std::make_unique<std::thread>(&PathFinder::Run, this);
+    
 }
 
 PathFinder::~PathFinder() {
@@ -11,9 +11,14 @@ PathFinder::~PathFinder() {
     mThread->join();
 }
 
+void PathFinder::start() {
+    mThread = std::make_unique<std::thread>(&PathFinder::Run, this);
+}
+
 void PathFinder::Run() {
-    std::this_thread::sleep_for(2ms);
     networkClient_.connect("10.91.1.33", "15556", 10);
+    std::this_thread::sleep_for(2ms);
+    
     while (!mIsStop)
     {
         if(!mStartSending)

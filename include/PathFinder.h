@@ -17,6 +17,7 @@ class PathFinder {
             str_buff_ = str_buff;
         }
         void convertBuff();
+        void start();
 
     private:
         void Run();

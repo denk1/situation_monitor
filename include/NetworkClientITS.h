@@ -17,6 +17,7 @@ class NetworkClientITS {
         void requestConnection();
         std::string getDataFromServer(std::string str);
         bool is_connected_ = false;
-        NetworkClient networkClient_;
+        
+        NetworkClient::NetworkClientPtr networkClient_;
 };
 #endif

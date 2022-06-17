@@ -9,7 +9,7 @@ using boost::lambda::var;
 using namespace std::chrono_literals;
 
 
-NetworkClient::NetworkClient(): socket_(io_context_) {
+NetworkClient::NetworkClient(): socket_(io_context_), read_n_() {
 
 }
 
@@ -43,20 +43,23 @@ std::string NetworkClient::read_line(boost::asio::chrono::steady_clock::duration
     // used as a callback and will update the ec variable when the operation
     // completes. The blocking_udp_client.cpp example shows how you can use
     // boost::bind rather than boost::lambda.
-    boost::system::error_code ec;
-    std::size_t n = 0;
+    
     
     boost::asio::async_read(socket_, boost::asio::dynamic_buffer(input_buffer_), boost::asio::transfer_at_least(1), 
-                                    (var(ec) = _1, var(n) = _2));                              
+                                    bind(&NetworkClient::handle_read, shared_from_this(), boost::placeholders::_1, boost::placeholders::_2));                              
     // Run the operation until it completes, or until the timeout.
     run(timeout);
 
+    std::string line(input_buffer_.substr(0, read_n_));
+    input_buffer_.erase(0, read_n_);
+    return line;
+}
+
+void NetworkClient::handle_read(const boost::system::error_code& ec, std::size_t n) {
     // Determine whether the read completed successfully.
     if (ec)
       throw boost::system::system_error(ec);
-    std::string line(input_buffer_.substr(0, n));
-    input_buffer_.erase(0, n);
-    return line;
+    read_n_ = n;
 }
 
 
@@ -70,12 +73,16 @@ void NetworkClient::write_line(const std::string &line,
     // completes. The blocking_udp_client.cpp example shows how you can use
     // boost::bind rather than boost::lambda.
     boost::system::error_code ec;
-    boost::asio::async_write(socket_, boost::asio::buffer(data), var(ec) = _1);
+    boost::asio::async_write(socket_, boost::asio::buffer(data), bind(&NetworkClient::handle_write, shared_from_this(), boost::placeholders::_1));
 
     // Run the operation until it completes, or until the timeout.
-    //run(timeout);
+    run(timeout);
 
     // Determine whether the read completed successfully.
+    
+}
+
+void NetworkClient::handle_write(const boost::system::error_code& ec) {
     if (ec)
       throw boost::system::system_error(ec);
 }
@@ -162,4 +169,8 @@ std::string NetworkClient::getDataFromServer(std::string str){
 
  bool NetworkClient::isSocketOpened() {
    return socket_.is_open();
+ }
+
+ void NetworkClient::stopSocket() {
+    io_context_.stop();
  }
