@@ -1,6 +1,8 @@
 #include "NetworkClientBMD.h"
 #include <boost/smart_ptr/make_shared.hpp>
 
+using namespace std::chrono_literals;
+
 NetworkClientBMD::NetworkClientBMD(): timeout_(10) {
 
 }
@@ -39,6 +41,7 @@ void NetworkClientBMD::requestConnection() {
  }
 
 std::string NetworkClientBMD::getDataFromServer(std::string str){
+   size_t s_str = str.size();
    networkClient_->write_line(str, boost::asio::chrono::seconds(10));
    std::string line;
     for (;;)
@@ -58,6 +61,7 @@ std::string NetworkClientBMD::getDataFromServer(std::string str){
         networkClient_.reset(new NetworkClient());
         networkClient_->connect(host_, service_, boost::asio::chrono::seconds(timeout_));
         requestConnection();
+        std::this_thread::sleep_for(100ms);
       }
       break;
     }

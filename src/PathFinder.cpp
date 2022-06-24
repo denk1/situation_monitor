@@ -34,9 +34,9 @@ void PathFinder::convertBuff() {
     std::stringstream ss;
     ss << (byte)0x44 << (byte)0x47;
     str_buff_convert_ = ss.str();
-    float width = 100, height = 100, step = 1;
-    float x_goal = 0, y_goal = 0, z_goal = 0;
-    const int center = 9950;
+    float width = 400, height = 100, step = 2;
+    float x_goal = 0, y_goal = 0, z_goal = 99;
+    const int center = width/step/2 + (height/step - 1) * (width/step);
     //test
     const size_t n = 3;
     size_t test_s = sizeof(n);
