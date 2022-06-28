@@ -14,8 +14,11 @@ class PathFinder {
         PathFinder();
         ~PathFinder();
         void setData(const std::string& str_buff) {
+            std::lock_guard lock(mutex_);
             str_buff_ = str_buff;
+            mStartSending = true;
         }
+        void setDataAsync(const std::string& str_buff);
         void convertBuff();
         void start();
 

@@ -1,3 +1,4 @@
+#include <future>
 #include "PathFinder.h"
 
 using namespace std::chrono_literals;
@@ -23,10 +24,14 @@ void PathFinder::Run() {
     {
         if(!mStartSending)
             continue;
-        std::lock_guard lock(mutex_);
+        convertBuff();
         std::cout << networkClient_.getDataFromServer(str_buff_convert_);
         
     }
+}
+
+void PathFinder::setDataAsync(const std::string& str_buff) {
+    auto a = std::async(std::launch::async, &PathFinder::setData, this, str_buff);
 }
 
 void PathFinder::convertBuff() {
@@ -59,5 +64,5 @@ void PathFinder::convertBuff() {
     //test
     //str_buff_convert_.append(n_b, n_b + 8);
     str_buff_convert_.append(str_buff_.begin() + 2, str_buff_.end());
-    mStartSending = true;
+    
 }
