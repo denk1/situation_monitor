@@ -11,6 +11,7 @@
 #include "OgreMeshManager.h"
 #include "ROI.h"
 #include "MeshObject.h"
+#include "ConfigMonitor.h"
 
 
 using namespace Ogre;
@@ -42,6 +43,7 @@ class SituationMonitor: public Ogre::Singleton<SituationMonitor>,
 
     ROI roi;
 	std::shared_ptr<MeshObject> ptrMeshObject_;
+	Ogre::String mResourcesCfg_ = "network.cfg";
 
 	bool mDebugOn;
     
@@ -60,8 +62,12 @@ class SituationMonitor: public Ogre::Singleton<SituationMonitor>,
 
 	void setup(void)
 	{
+		OgreBites::ApplicationContext::setup();
+		// config initialization must be before everything
+		ConfigMonitor::getSingletonPtr()->setConfig(mResourcesCfg_);
 		roi.connect();
-	    OgreBites::ApplicationContext::setup();
+	    
+		
 	    addInputListener(this);
 
 	    mSceneMgr = getRoot()->createSceneManager();

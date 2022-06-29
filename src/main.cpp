@@ -3,16 +3,17 @@
  *
  *       Filename:  main.cpp
  *
- *    Description:  BtOgre test application, main file.
+ *    Description:  test app.
  *
  *        Version:  1.0
- *        Created:  01/14/2009 05:48:31 PM
+ *        Created:  01/14/2009 03:40:30 PM
  *
- *         Author:  Nikhilesh (nikki)
+ *         Author:  Denk1 (nikki)
  *
  * =====================================================================================
  */
 
+#include "ConfigMonitor.h"
 #include "SituationMonitor.h"
 /*
  * ===  FUNCTION  ======================================================================
@@ -31,7 +32,7 @@ int main(int argc, char **argv)
 #endif
 {
     // Create application object
-    
+    ConfigMonitor configMonitor;
     SituationMonitor app;
     SituationMonitor::getSingleton().initApp();
     SituationMonitor::getSingleton().getRoot()->startRendering();

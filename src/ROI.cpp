@@ -1,4 +1,5 @@
 #include "ROI.h"
+#include "ConfigMonitor.h"
 
 using namespace std;
 
@@ -9,9 +10,13 @@ ROI::ROI():pathFinder_() {
 void ROI::connect() {
     try {
         pathFinder_.start();
-        networkClient_.connect("localhost", "15555", 10);
+        networkClient_.connect(ConfigMonitor::getSingleton().mConfigItems["CAR_HOST"],
+                               ConfigMonitor::getSingleton().mConfigItems["CAR_PORT"], 
+                               10);
     } catch( boost::system::system_error err) {
-        std::cerr << "connection error: " << err.what() << std::endl; 
+        std::cerr << "connection error: \n" << err.what() << std::endl; 
+    } catch( exception e) {
+        cerr << "error: \n" << e.what() << std::endl;
     }
 }
 

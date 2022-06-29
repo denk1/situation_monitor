@@ -19,8 +19,10 @@ add_executable(${PROJECT_NAME}
                  src/NetworkClientBMD.cpp
                  src/PathFinder.cpp
                  src/MeshObject.cpp
+                 src/ConfigMonitor.cpp
                  src/main.cpp
                  )
 target_link_libraries(situation_monitor OgreMain OgreBites BtOgre tinyxml)
 configure_file(data/resources.cfg.in ${CMAKE_BINARY_DIR}/resources.cfg @ONLY)
+configure_file(data/network.cfg.in ${CMAKE_BINARY_DIR}/network.cfg @ONLY)
 file(COPY ${OGRE_CONFIG_DIR}/plugins.cfg DESTINATION ${CMAKE_BINARY_DIR})

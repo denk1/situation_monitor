@@ -1,5 +1,6 @@
 #include <future>
 #include "PathFinder.h"
+#include "ConfigMonitor.h"
 
 using namespace std::chrono_literals;
 
@@ -17,7 +18,7 @@ void PathFinder::start() {
 }
 
 void PathFinder::Run() {
-    networkClient_.connect("10.91.1.33", "15556", 10);
+    networkClient_.connect(ConfigMonitor::getSingleton().mConfigItems["BMP_SERVER_HOST"], ConfigMonitor::getSingleton().mConfigItems["BMP_SERVER_PORT"], 10);
     std::this_thread::sleep_for(2ms);
     
     while (!mIsStop)
