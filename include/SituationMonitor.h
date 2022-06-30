@@ -43,7 +43,7 @@ class SituationMonitor: public Ogre::Singleton<SituationMonitor>,
 
     ROI roi;
 	std::shared_ptr<MeshObject> ptrMeshObject_;
-	Ogre::String mResourcesCfg_ = "network.cfg";
+	Ogre::String mNetworkCfg_ = "network.cfg";
 
 	bool mDebugOn;
     
@@ -64,7 +64,7 @@ class SituationMonitor: public Ogre::Singleton<SituationMonitor>,
 	{
 		OgreBites::ApplicationContext::setup();
 		// config initialization must be before everything
-		ConfigMonitor::getSingletonPtr()->setConfig(mResourcesCfg_);
+		ConfigMonitor::getSingletonPtr()->setConfig(mNetworkCfg_);
 		roi.connect();
 	    
 		
