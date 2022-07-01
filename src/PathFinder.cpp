@@ -1,8 +1,28 @@
 #include <future>
+#include <bit>
 #include "PathFinder.h"
 #include "ConfigMonitor.h"
 
 using namespace std::chrono_literals;
+
+template <class To, class From>
+std::enable_if_t<
+    sizeof(To) == sizeof(From) &&
+    std::is_trivially_copyable_v<From> &&
+    std::is_trivially_copyable_v<To>,
+    To>
+// constexpr support needs compiler magic
+bit_cast(const From& src) noexcept
+{
+    static_assert(std::is_trivially_constructible_v<To>,
+        "This implementation additionally requires "
+        "destination type to be trivially constructible");
+ 
+    To dst;
+    std::memcpy(&dst, &src, sizeof(To));
+    return dst;
+}
+
 
 PathFinder::PathFinder(): mIsStop(), mStartSending() {
     
@@ -26,7 +46,9 @@ void PathFinder::Run() {
         if(!mStartSending)
             continue;
         convertBuff();
-        std::cout << networkClient_.getDataFromServer(str_buff_convert_);
+        std::string path_str = networkClient_.getDataFromServer(str_buff_convert_);
+        std::cout << path_str;
+        convertRecievedPath(path_str);
         
     }
 }
@@ -66,4 +88,17 @@ void PathFinder::convertBuff() {
     //str_buff_convert_.append(n_b, n_b + 8);
     str_buff_convert_.append(str_buff_.begin() + 2, str_buff_.end());
     
+}
+
+void PathFinder::convertRecievedPath(const std::string& str_path) {
+    u_char n_in_char[4];
+    if((u_char)str_path[0] == 0x44 && (u_char)str_path[1] == 0x48) {
+        std::cout << "the path is OK" << std::endl;
+        std::copy(str_path.begin() + 2, str_path.begin() + 6, n_in_char);
+        const int n_in_int = bit_cast<int>(n_in_char);
+        std::cout << "the quantity of the path items is " << n_in_int << std::endl; 
+    } 
+    else {
+        std::cout << "the path message has not been reconized" << std::endl;
+    }
 }

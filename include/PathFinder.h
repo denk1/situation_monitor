@@ -20,6 +20,7 @@ class PathFinder {
         }
         void setDataAsync(const std::string& str_buff);
         void convertBuff();
+        void convertRecievedPath(const std::string& str_path);
         void start();
 
     private:
