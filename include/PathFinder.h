@@ -9,6 +9,11 @@
 
 using byte = unsigned char;
 
+struct Path {
+    size_t n = 0;
+    std::vector<float> v_path_value;
+};
+
 class PathFinder {
     public:
         PathFinder();
@@ -22,16 +27,21 @@ class PathFinder {
         void convertBuff();
         void convertRecievedPath(const std::string& str_path);
         void start();
+        Path getTargetPath();
+        
 
     private:
         void Run();
+        void setTargetPath(size_t n, const std::string& str_path);
         bool mIsStop;
         bool mStartSending;
         std::string str_buff_;
         std::string str_buff_convert_;
         std::unique_ptr<std::thread> mThread;
         std::mutex mutex_;
+        std::mutex mutex1_;
         NetworkClientBMD networkClient_;
+        Path mTargetPath;
         
 };
 #endif //PATH_FINDER_H

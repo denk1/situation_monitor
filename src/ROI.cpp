@@ -31,3 +31,7 @@ bool ROI::getData(std::shared_ptr<MeshObject> ptrMeshObject) {
     }
     return false;
 }
+
+Path ROI::getPath() {
+    return pathFinder_.getTargetPath();
+}

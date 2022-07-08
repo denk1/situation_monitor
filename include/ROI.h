@@ -12,6 +12,7 @@ public:
     ROI();
     void connect();
     bool getData(std::shared_ptr<MeshObject> ptrMeshObject);
+    Path getPath();
 private:
     NetworkClientITS networkClient_;
     PathFinder pathFinder_;
