@@ -20,6 +20,7 @@ add_executable(${PROJECT_NAME}
                  src/PathFinder.cpp
                  src/MeshObject.cpp
                  src/ConfigMonitor.cpp
+                 src/PathDrawer.cpp
                  src/main.cpp
                  )
 target_link_libraries(situation_monitor OgreMain OgreBites BtOgre tinyxml)

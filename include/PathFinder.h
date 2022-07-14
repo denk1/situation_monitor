@@ -16,7 +16,7 @@ struct Path {
 
 class PathFinder {
     public:
-        PathFinder();
+        PathFinder(float width, float height);
         ~PathFinder();
         void setData(const std::string& str_buff) {
             std::lock_guard lock(mutex_);
@@ -42,6 +42,7 @@ class PathFinder {
         std::mutex mutex1_;
         NetworkClientBMD networkClient_;
         Path mTargetPath;
+        const float x_roi, y_roi;
         
 };
 #endif //PATH_FINDER_H

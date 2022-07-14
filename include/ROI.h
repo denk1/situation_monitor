@@ -9,12 +9,13 @@
 
 class ROI {
 public:
-    ROI();
+    ROI(float width, float height);
     void connect();
     bool getData(std::shared_ptr<MeshObject> ptrMeshObject);
     Path getPath();
 private:
     NetworkClientITS networkClient_;
     PathFinder pathFinder_;
+    const float width_, height_;
 };
 #endif

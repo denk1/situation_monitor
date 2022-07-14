@@ -3,7 +3,7 @@
 
 using namespace std;
 
-ROI::ROI():pathFinder_() {
+ROI::ROI(float width, float height):width_(width), height_(height),   pathFinder_(width, height) {
    
 }
 

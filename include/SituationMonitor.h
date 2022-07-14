@@ -12,6 +12,7 @@
 #include "ROI.h"
 #include "MeshObject.h"
 #include "ConfigMonitor.h"
+#include "PathDrawer.h"
 
 
 using namespace Ogre;
@@ -40,18 +41,18 @@ class SituationMonitor: public Ogre::Singleton<SituationMonitor>,
 	Ogre::Entity *mGroundEntity;
 
 	OgreBites::CameraMan *mCamMan;
-
+	const float x_roi = 400, y_roi = 200; 
     ROI roi;
+	PathDrawer pathDrawer;
 	std::shared_ptr<MeshObject> ptrMeshObject_;
 	Ogre::String mNetworkCfg_ = "network.cfg";
 	Ogre::HardwarePixelBufferSharedPtr mPixelBuffer;
-
 	bool mDebugOn;
     
 
     public:
 
-	SituationMonitor() : OgreBites::ApplicationContext("Situation Monitor")
+	SituationMonitor() : OgreBites::ApplicationContext("Situation Monitor"), roi(x_roi, y_roi), pathDrawer(x_roi, y_roi)
 	{
 		mDebugOn = true;
 	}
@@ -89,7 +90,7 @@ class SituationMonitor: public Ogre::Singleton<SituationMonitor>,
 
 	    Ogre::SceneNode* camnode = mSceneMgr->getRootSceneNode()->createChildSceneNode("CameraNode");
 	    camnode->attachObject(mCamera);
-		camnode->setPosition(Ogre::Vector3(0, 0, 0.0f));
+		camnode->setPosition(Ogre::Vector3(0, 1, 0.0f));
 
 	    // and tell it to render into the main window
 	    getRenderWindow()->addViewport(mCamera);
@@ -111,23 +112,24 @@ class SituationMonitor: public Ogre::Singleton<SituationMonitor>,
 
 		Plane plane;
     	plane.normal = Vector3::UNIT_Y;
-    	plane.d = 100;
+    	plane.d = 0;
 
 		MeshManager::getSingleton().createPlane("Myplane",
                                             ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, plane,
-                                            256, 256, 40, 40, true, 1, 60, 60, Vector3::UNIT_Z);
+                                            400, 200, 40, 40, true, 1, 1, 1, Vector3::UNIT_Z);
     	Entity *pPlaneEnt = mSceneMgr->createEntity("plane", "Myplane");
 		
     	pPlaneEnt->setCastShadows(false);
 		
     	// Create Ogre stuff.
-    	mSceneMgr->getRootSceneNode()->createChildSceneNode(Vector3(0, 99, 0))->attachObject(pPlaneEnt);
+		//mSceneMgr->getSceneNode("CameraNode")->createChildSceneNode(Vector3(0, 99, 0))->attachObject(pPlaneEnt);
+    	mSceneMgr->getRootSceneNode()->createChildSceneNode(Vector3(0, 0, 0))->attachObject(pPlaneEnt);
 		ptrMeshObject_ = std::make_shared<MeshObject>(this);
 		Ogre::String texName = "dynamic_texture";
 		Ogre::TexturePtr texture = Ogre::TextureManager::getSingleton().createManual(texName,
 																			 Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
 																			 Ogre::TEX_TYPE_2D,
-																			 256, 256, 1,
+																			 400, 200, 10,
 																			 0,
 																			 Ogre::PF_R8G8B8A8,
 																			 Ogre::TU_DYNAMIC
@@ -144,24 +146,6 @@ class SituationMonitor: public Ogre::Singleton<SituationMonitor>,
 		texture = Ogre::TextureManager::getSingletonPtr()->getByName(texName);
 		mPixelBuffer = texture->getBuffer(0,0);
 		
-		/****
-		uchar *data = static_cast<uchar*>(pb.data);
-		size_t pitch = pb.rowPitch;
-		
-		for(size_t i = 0; i < 256; i++) {
-			for(size_t j = 0; j < 256; j++) {
-				for(size_t k = 0; k < 4; k++) {
-					Ogre::ColourValue colourValue = pb.getColourAt(i, j, 0);
-					data[i * pitch + j + k] = 0;
-					
-				}
-				
-				//pb.setColourAt(Ogre::ColourValue(1.0, 0.1, 0.1, 1.0), i, j, 0);
-				
-			}
-		}
-		texture->getBuffer()->unlock();
-		*****/		
 
 	}
 
@@ -196,12 +180,14 @@ class SituationMonitor: public Ogre::Singleton<SituationMonitor>,
             // 0xAABBGGRR -> fill the buffer with yellow pixels
             std::fill(data, data + width * height, 0x00FFFF15);
 
+			roi.getData(ptrMeshObject_);
+			Path path = roi.getPath();
+			pathDrawer.setPathData(data, path.v_path_value);
             // Unlock the buffer again (frees it for use by the GPU)
             mPixelBuffer->unlock();
         }
 		
-		roi.getData(ptrMeshObject_);
-		Path path = roi.getPath();
+		
 
         return true;
     }
