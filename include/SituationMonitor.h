@@ -181,8 +181,8 @@ class SituationMonitor: public Ogre::Singleton<SituationMonitor>,
             std::fill(data, data + width * height, 0x00FFFF15);
 
 			roi.getData(ptrMeshObject_);
-			Path path = roi.getPath();
-			pathDrawer.setPathData(data, path.v_path_value);
+			const Path path = roi.getPath();
+			pathDrawer.setPathData(data, path);
             // Unlock the buffer again (frees it for use by the GPU)
             mPixelBuffer->unlock();
         }

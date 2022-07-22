@@ -95,22 +95,20 @@ void PathFinder::convertBuff()
 void PathFinder::convertRecievedPath(const std::string &str_path)
 {
     if (!str_path.empty())
-    {
-        std::string str_pure_path;
-        u_char n_in_char[4];
-        if ((u_char)str_path[0] == 0x44 && (u_char)str_path[1] == 0x48)
+    { 
+        if (mStr_pure_path_.empty() && checkHeader(str_path))
         {
-            std::cout << "the path is OK" << std::endl;
-            std::copy(str_path.begin() + 2, str_path.begin() + 6, n_in_char);
-            str_pure_path.append(str_path.begin() + 6, str_path.end());
-            const int n_in_int = bit_cast<int>(n_in_char);
-            setTargetPath(n_in_int, str_pure_path);
-            std::cout << "the quantity of the path items is " << n_in_int << std::endl;
+            mStr_pure_path_.append(str_path.begin() + 6, str_path.end());
+            std::cout << "the quantity of the path items is " << n_in_int_ << std::endl;
         }
-        else
-        {
-            std::cout << "the path message has not been reconized" << std::endl;
-        }
+        else {
+            mStr_pure_path_ += str_path;
+            if(checkHeader(mStr_pure_path_)) {
+                mStr_pure_path_.erase(0, 6);
+            }
+            
+        } 
+        extractPath(n_in_int_);
     }
 }
 
@@ -131,4 +129,29 @@ void PathFinder::setTargetPath(size_t n, const std::string &str_path)
         std::copy(str_path.begin() + i * 4, str_path.begin() + i * 4 + 4, float_in_char);
         mTargetPath.v_path_value.push_back(bit_cast<float>(float_in_char));
     }
+}
+
+void PathFinder::extractPath(int n) {
+    if(mStr_pure_path_.size() == n * 4) {
+        setTargetPath(n, mStr_pure_path_);
+        mStr_pure_path_.clear();
+    }
+    else if(mStr_pure_path_.size() > n * 4) {
+        std::string str_pure_path;
+        str_pure_path.append(mStr_pure_path_.begin(), mStr_pure_path_.begin() + n * 4);
+        setTargetPath(n, str_pure_path);
+        mStr_pure_path_.erase(0,  n * 4);
+    } 
+}
+
+bool PathFinder::checkHeader(const std::string& str) {
+    if((u_char)str[0] == 0x44 && (u_char)str[1] == 0x48) {
+         u_char n_in_char[4];
+        std::cout << "the path is OK" << std::endl;
+        std::copy(str.begin() + 2, str.begin() + 6, n_in_char);
+        n_in_int_ = bit_cast<int>(n_in_char);
+        return true;
+    }
+    else 
+        return false;
 }

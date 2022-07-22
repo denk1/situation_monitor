@@ -33,6 +33,8 @@ class PathFinder {
     private:
         void Run();
         void setTargetPath(size_t n, const std::string& str_path);
+        void extractPath(int n);
+        bool checkHeader(const std::string& str);
         bool mIsStop;
         bool mStartSending;
         std::string str_buff_;
@@ -43,6 +45,8 @@ class PathFinder {
         NetworkClientBMD networkClient_;
         Path mTargetPath;
         const float x_roi, y_roi;
+        std::string mStr_pure_path_;
+        int n_in_int_;
         
 };
 #endif //PATH_FINDER_H

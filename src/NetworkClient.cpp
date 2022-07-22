@@ -45,7 +45,7 @@ std::string NetworkClient::read_line(boost::asio::chrono::steady_clock::duration
     // boost::bind rather than boost::lambda.
     
     
-    boost::asio::async_read(socket_, boost::asio::dynamic_buffer(input_buffer_), boost::asio::transfer_at_least(1), 
+    boost::asio::async_read(socket_, boost::asio::dynamic_buffer(input_buffer_), boost::asio::transfer_at_least(1),
                                     bind(&NetworkClient::handle_read, shared_from_this(), boost::placeholders::_1, boost::placeholders::_2));                              
     // Run the operation until it completes, or until the timeout.
     run(timeout);
